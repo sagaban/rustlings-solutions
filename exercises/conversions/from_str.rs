@@ -11,7 +11,6 @@ struct Person {
     age: usize,
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -26,6 +25,23 @@ struct Person {
 impl FromStr for Person {
     type Err = Box<dyn error::Error>;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.len() == 0 {
+            Err("Argument can not be empty")?
+        } else {
+            let data = s.split(',').collect::<Vec<&str>>();
+            let name = data[0];
+            if data.len() != 2 || name.len() == 0 {
+                Err("There should be two values separates by a ','")?
+            } else {
+                let parsedAge = data[1].parse::<usize>();
+                match parsedAge {
+                    Ok(age) => Ok(Person { name: name.to_string(), age: age }),
+                    _ => {
+                        Err("Age could not be parsed")?
+                    }
+                }
+            }
+        }
     }
 }
 
